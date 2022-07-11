@@ -4,7 +4,6 @@ from ctypes import windll as wll
 from PIL import Image, ImageDraw, ImageFont
 from time import sleep
 from math import sin, cos, pi
-from torch import layout
 import win32api
 from random import choice
 
@@ -151,20 +150,21 @@ class Drawer:
       offset = el_data["char_size"]*scale
 
       font_size = scale * self.font.size
-
-      if element.title in glowing_gang and not self.LDM:
-        loc = Location(element.title)
-        shadow_sett = loc.get("shadow_size")
-        shadow_itt = loc.get("shadow_itterations")
+      if element.title in glowing_gang:
         now = datetime.now()
         spin = (now.second + now.microsecond/1000000)*pi/60
         color = [127, abs(int(255*sin(spin))), abs(int(255*cos(spin)))]
-        shadow_size = 60*(now.minute%2)+now.second-60
-        if shadow_size >= 0: shadow_size += 1
-        shadow_size = abs(shadow_size)**3/7200+1.5
-        for i in range(shadow_itt, -1, -1):
-          shadow = tuple(map(lambda x:x-i-55, color))
-          self.write(x-i/(shadow_sett*shadow_size), y-i/(shadow_sett*shadow_size), text, shadow, offset, font_size+i/shadow_size, point)
+        if not self.LDM:
+          loc = Location(element.title)
+          shadow_sett = loc.get("shadow_size")
+          shadow_itt = loc.get("shadow_itterations")
+          shadow_size = 60*(now.minute%2)+now.second-60
+          if shadow_size >= 0: shadow_size += 1
+          shadow_size = abs(shadow_size)**3/7200+1.5
+          for i in range(shadow_itt, -1, -1):
+            shadow = tuple(map(lambda x:x-i-55, color))
+            self.write(x-i/(shadow_sett*shadow_size), y-i/(shadow_sett*shadow_size), text, shadow, offset, font_size+i/shadow_size, point)
+          continue
 
       lines = text.split("\n")
       lline = len(max(lines, key=len))
@@ -202,7 +202,7 @@ class Main(Drawer):
     self.always_update = main_data["always_update"]
 
     self.mBuffer = wll.user32.GetKeyState(4)
-    self.element = elements
+    self.elements = elements
     if font == "default":
       self.font = ImageFont.truetype(f"{dir_path}/additional/{Main.legit_fonts[0]}.ttf", size=self.font_size, encoding="utf-8")
     else:

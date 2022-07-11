@@ -1,5 +1,4 @@
 import os
-from turtle import down
 import pygame as pg
 from json import dumps, load
 path = __file__.rpartition("\\")[0]
@@ -13,11 +12,11 @@ else:
     grid, deform = data["Icon border"][1]
 
 if not grid:
-  grid = [25, 10]
+  grid = [25, 11]
 if not mapp:
   mapp = [[0 for _ in range(grid[0])] for _ in range(grid[1])]
 if not deform:
-  deform = [38, 50.5]
+  deform = [38, 49]
 else: deform = [deform[0]/2, deform[1]/2]
 
 fps = 60
