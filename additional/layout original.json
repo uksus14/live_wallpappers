@@ -1,0 +1,20 @@
+{
+    "Week day":  {"point": ["middle", "left"  ], "pos": [0.5, 0.6 ], "scale": 0.35,"char_size": 85},
+    "Date":      {"point": ["middle", "right" ], "pos": [0.5, 0.6 ], "scale": 0.35,"char_size": 85},
+    "Time":      {"point": ["middle", "middle"], "pos": [0.5, 0.5 ], "scale": 1,   "char_size": 100},
+    "Image":     {"point": ["bottom", "middle"], "pos": [0.5, 0.25], "scale": 1,   "char_size": 50},
+    "Motivation":{"point": ["bottom", "middle"], "pos": [0.5, 0.4 ], "scale": 1,   "char_size": 95},
+    "Month":     {"point": ["top",    "right" ], "pos": [0.5, 0.6 ], "scale": 0.35,"char_size": 85},
+    "Border":    {"point": ["middle", "middle"], "pos": [0.5, 0.6 ], "scale": 0.35,"char_size": 85},
+    "show_seconds":  true,
+    "shadow size": 2,
+    "font": "default",
+    "bg_color": [0, 0, 0],
+    "delay_mode": false,
+    "font_size": 100,
+    "low_detal_mode": true,
+    "debug_mode": true,
+    "hitbox_mode": false,
+    "main_color": [255, 255, 255],
+    "always_update": ["Motivation"]
+}
