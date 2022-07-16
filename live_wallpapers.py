@@ -123,6 +123,7 @@ class Drawer:
       y += size
 
   def update(self, to_update, is_ending=False):
+    self.draw_list = []
     if not self.FPS_mode:
       self.canvas = Image.new("RGB", (self.width, self.height), self.bg_color)
     self.draw = ImageDraw.Draw(self.canvas)
@@ -134,6 +135,10 @@ class Drawer:
       el_data = element.get_loc()
       color = self.std_color
 
+      if element.title in glowing_gang:
+        now = datetime.now()
+        spin = (now.second + now.microsecond/1000000)*pi/60
+        color = (127, abs(int(255*sin(spin))), abs(int(255*cos(spin))))
       if element.title in ["Icon border"]:
         for xy1, xy2 in el_data[0]:
           grid, trans = el_data[1][0], el_data[1][1]
@@ -142,7 +147,7 @@ class Drawer:
           x2, y2 = xy2
           if x1 == grid[0]: x1+=1
           if x2 == grid[0]: x2+=1
-          self.draw.rectangle(((x1*x_trans, y1*y_trans), (x2*x_trans, y2*y_trans)), color)
+          self.draw_list.append(("rect", (((x1*x_trans, y1*y_trans), (x2*x_trans, y2*y_trans)), color)))
         continue
       point = el_data["point"]
       x, y = [el_data["pos"][0]*self.width, el_data["pos"][1]*self.height]
@@ -150,21 +155,6 @@ class Drawer:
       offset = el_data["char_size"]*scale
 
       font_size = scale * self.font.size
-      if element.title in glowing_gang:
-        now = datetime.now()
-        spin = (now.second + now.microsecond/1000000)*pi/60
-        color = [127, abs(int(255*sin(spin))), abs(int(255*cos(spin)))]
-        if not self.LDM:
-          loc = Location(element.title)
-          shadow_sett = loc.get("shadow_size")
-          shadow_itt = loc.get("shadow_itterations")
-          shadow_size = 60*(now.minute%2)+now.second-60
-          if shadow_size >= 0: shadow_size += 1
-          shadow_size = abs(shadow_size)**3/7200+1.5
-          for i in range(shadow_itt, -1, -1):
-            shadow = tuple(map(lambda x:x-i-55, color))
-            self.write(x-i/(shadow_sett*shadow_size), y-i/(shadow_sett*shadow_size), text, shadow, offset, font_size+i/shadow_size, point)
-          continue
 
       lines = text.split("\n")
       lline = len(max(lines, key=len))
@@ -178,13 +168,19 @@ class Drawer:
       elif point[1] == "right": dx1 -= lline*offset
       dx2 = dx1 + lline*offset
       if self.hitbox_mode:
-        self.draw.rectangle(((dx1, dy1), (dx2, dy2)), (127, 127, 127))
+        self.draw_list.append(("rect", (((dx1, dy1), (dx2, dy2)), (127, 127, 127))))
       self.write(x, y, text, tuple(color), offset, font_size, point)
+    for sprite in self.draw_list:
+      if sprite[0] == "rect":
+        self.draw.rectangle(*sprite[1])
+      elif sprite[0] == "text":
+        self.write(*sprite[1])
     if is_ending: sleep(0.5)
     try:
       self.canvas.save(f"{dir_path}/additional/wallpaper.png", "PNG")
     except: pass
     wll.user32.SystemParametersInfoW(0x0014, 0, f"{dir_path}/additional/wallpaper.png", 2)
+
 
 class Main(Drawer):
   legit_fonts = ["Rubik_Mono_One"]
@@ -225,7 +221,7 @@ class Main(Drawer):
       to_update.clear()
 
 if __name__ == "__main__":
-  glowing_gang =  ["Motivation"]
+  glowing_gang =  ["Motivation", "Icon border"]
   dir_path = __file__.rpartition("\\")[0].replace("\\", "/")
   while_labels = [Label(["Stay Calm\n& Be Cool", "Stay Turned", "Make It Happen", "Good Vibes Only", "Stop Saying\n\"Tomorrow\"", "Get'em all", "You Can\n&\nYou Will"], "Motivation")]
   main = Main([*while_labels, Date(), Time(), WeekDay(), Label("|\n|", "Border"), Label(None, "Icon border")])

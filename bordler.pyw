@@ -12,11 +12,11 @@ else:
     grid, deform = data["Icon border"][1]
 
 if not grid:
-  grid = [25, 11]
+  grid = [25, 10]
 if not mapp:
   mapp = [[0 for _ in range(grid[0])] for _ in range(grid[1])]
 if not deform:
-  deform = [38, 49]
+  deform = [38, 50.5]
 else: deform = [deform[0]/2, deform[1]/2]
 
 fps = 60
