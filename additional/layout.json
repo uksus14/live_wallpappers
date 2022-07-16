@@ -16,5 +16,7 @@
     "debug_mode": true,
     "hitbox_mode": false,
     "main_color": [255, 255, 255],
-    "always_update": ["Motivation"]
+    "always_update": ["Motivation"],
+    "glow_speed": 0.5,
+    "": "minutes to ascilate"
 }

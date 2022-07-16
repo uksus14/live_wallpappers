@@ -90,7 +90,7 @@ class Time(Label):
     return datetime.now().strftime(time_formating.center(8+len(time_formating)%2))
 
 class Drawer:
-  def __init__(self, bg_color, font, LDM, FPS_mode, hitbox_mode, std_color, elements):
+  def __init__(self, bg_color, font, LDM, FPS_mode, hitbox_mode, std_color, glow_speed, elements):
     self.height = wll.user32.GetSystemMetrics(1)
     self.width  = wll.user32.GetSystemMetrics(0)
     self.bg_color = bg_color
@@ -100,6 +100,7 @@ class Drawer:
     self.LDM = LDM
     self.std_color = std_color
     self.FPS_mode = FPS_mode
+    self.glow_speed = glow_speed
     self.canvas = Image.new("RGB", (self.width, self.height), self.bg_color)
     sleep(0.1)
     self.canvas.save(f"{dir_path}/additional/wallpaper.png", "PNG")
@@ -137,7 +138,7 @@ class Drawer:
 
       if element.title in glowing_gang:
         now = datetime.now()
-        spin = (now.second + now.microsecond/1000000)*pi/60
+        spin = self.glow_speed*(now.second + now.microsecond/1000000)*pi/30
         color = (127, abs(int(255*sin(spin))), abs(int(255*cos(spin))))
       if element.title in ["Icon border"]:
         for xy1, xy2 in el_data[0]:
@@ -196,6 +197,7 @@ class Main(Drawer):
     self.hitbox_mode = main_data["hitbox_mode"]
     self.main_color = tuple(main_data["main_color"])
     self.always_update = main_data["always_update"]
+    self.glow_speed = main_data["glow_speed"]
 
     self.mBuffer = wll.user32.GetKeyState(4)
     self.elements = elements
@@ -204,7 +206,7 @@ class Main(Drawer):
     else:
       self.font = ImageFont.truetype(f"{dir_path}/additional/{font}.ttf", size=self.font_size, encoding="utf-8")
 
-    super().__init__(self.bg_color, self.font, self.low_detal_mode, not self.debug_mode, self.hitbox_mode, self.main_color, elements)
+    super().__init__(self.bg_color, self.font, self.low_detal_mode, not self.debug_mode, self.hitbox_mode, self.main_color, glow_speed, elements)
 
   def start(self):
     to_update = []
